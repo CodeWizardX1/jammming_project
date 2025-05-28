@@ -8,7 +8,7 @@ function SearchBar() {
         <input type="text" placeholder="Enter a song, album, or artist"></input>
       </div>
       <div>
-        <button>Search</button>
+        <button className={styles.searchButton}>SEARCH</button>
       </div>
     </div>
   );

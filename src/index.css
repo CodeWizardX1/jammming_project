@@ -1,15 +1,27 @@
-html, body {
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#root {
   height: 100%;
 }
 
 body {
-  margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: url("../src/assets/jr-korpa-mDvtYjZR8QI-unsplash.jpg");
+  background-image: url("../src/assets/chatgpt_music_bg_1.png");
   background-size: cover;
   position: relative;
 }
@@ -24,7 +36,6 @@ body::before {
   background-color: #421955b7; /* Purple with 60% opacity */
   z-index: -1; /* Place behind content */
 }
-
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",

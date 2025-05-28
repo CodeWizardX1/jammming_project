@@ -1,5 +1,16 @@
 .App {
   text-align: center;
+  min-height: 100vh;
+  height: 100%;
+}
+
+.bodyContent {
+  display: flex;
+  box-sizing: border-box;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  padding: 0px 100px;
 }
 
 .App-logo {
