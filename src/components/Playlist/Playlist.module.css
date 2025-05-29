@@ -3,17 +3,30 @@
   flex-direction: column;
   align-items: center;
   width: 40%;
-  height: 500px;
+  min-height: 100vh;
   background-color: rgba(0, 0, 0, 0.637);
   border: 5px solid black;
   border-radius: 10px;
 }
 
-.borderline{
-  height: 100px;
+
+
+.playlistTitle {
+  color: #fff;
   width: 85%;
-  margin-bottom: 20px;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.466);
+  background-color: #6c28d900;
+  border-bottom: 2px solid #ffffff;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 20px 0;
+  border-radius: 0;
+  text-align: left;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: #fff; /* or your default border color */
 }
 
 .saveButton {
@@ -37,4 +50,9 @@
 
 .saveButton:hover {
   background: #6d28d9;
+}
+
+.tracklistContainer{
+  width: 100%;
+  margin-bottom: 50px;
 }

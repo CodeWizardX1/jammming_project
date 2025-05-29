@@ -1,11 +1,20 @@
 import React from "react";
 import styles from "./Playlist.module.css";
+import Track from "../Track/Track";
 
-function Playlist() {
+function Playlist({ playlistName, playlistTracks }) {
   return (
     <div className={styles.playlistContainer}>
-      <div className={styles.borderline}></div>
-      <div className={styles.tracklistContainer}></div>
+      <input
+        className={styles.playlistTitle}
+        type="text"
+        value={playlistName}
+      />
+      <div className={styles.tracklistContainer}>
+        {playlistTracks.map((track) => (
+          <Track key={track.id} track={track} isRemoval={true}/>
+        ))}
+      </div>
       <button className={styles.saveButton}>SAVE TO SPOTIFY</button>
     </div>
   );

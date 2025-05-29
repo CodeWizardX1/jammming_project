@@ -1,9 +1,9 @@
 import React from "react";
-import "./Header.module.css";
+import styles from "./Header.module.css";
 
 function Header() {
   return (
-    <div>
+    <div className={styles.headerContainer}>
       <h1>
         Ja<span>mmm</span>ing
       </h1>
