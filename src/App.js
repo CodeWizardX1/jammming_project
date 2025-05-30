@@ -7,7 +7,7 @@ import SearchResults from "./components/SearchResults/SearchResults";
 import mockTracks from "./data/mockTracks";
 
 function App() {
-  const [tracks, setTracks] = useState(mockTracks);
+  const [tracks] = useState(mockTracks);
   const [playlistName, setPlaylistName] = useState("");
   const [playlistTracks, setPlaylistTracks] = useState([]);
 
