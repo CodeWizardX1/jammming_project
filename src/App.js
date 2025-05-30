@@ -8,11 +8,8 @@ import mockTracks from "./data/mockTracks";
 
 function App() {
   const [tracks, setTracks] = useState(mockTracks);
-  const [playlistName, setPlaylistName] = useState("My Playlist");
-  const [playlistTracks, setPlaylistTracks] = useState([
-    mockTracks[1],
-    mockTracks[2],
-  ]);
+  const [playlistName, setPlaylistName] = useState("");
+  const [playlistTracks, setPlaylistTracks] = useState([]);
 
   const addTrackToPlaylist = (track) => {
     if (playlistTracks.find((savedTrack) => savedTrack.id === track.id)) {
@@ -25,13 +22,38 @@ function App() {
     setPlaylistTracks((prev) => prev.filter((t) => t.id !== track.id));
   };
 
+  const handleChange = ({ target }) => {
+    setPlaylistName(target.value);
+  };
+
+  const savePlaylist = () => {
+    //returns an array of all the track uris
+    const trackUris = playlistTracks.map((track) => track.uri);
+
+    //log array to console
+    console.log("Saving playlist with URIs: ", trackUris);
+
+    //clear playlist tracks and clear name input
+    setPlaylistTracks([]);
+    setPlaylistName("");
+
+    //alert confirmation message
+    alert("Saved Playlist to Spotify! (mock)");
+  };
+
   return (
     <div className="App">
       <Header />
       <SearchBar />
       <div className="bodyContent">
         <SearchResults tracks={tracks} onAdd={addTrackToPlaylist} />
-        <Playlist playlistName={playlistName} playlistTracks={playlistTracks} onRemove={removeFromPlaylist}/>
+        <Playlist
+          playlistName={playlistName}
+          playlistTracks={playlistTracks}
+          onRemove={removeFromPlaylist}
+          onChange={handleChange}
+          onSave={savePlaylist}
+        />
       </div>
     </div>
   );
