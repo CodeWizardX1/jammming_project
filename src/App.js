@@ -5,6 +5,7 @@ import Header from "./components/Header/Header";
 import Playlist from "./components/Playlist/Playlist";
 import SearchResults from "./components/SearchResults/SearchResults";
 import mockTracks from "./data/mockTracks";
+// import Spotify from "./utils/Spotify";
 
 function App() {
   const [tracks] = useState(mockTracks);
