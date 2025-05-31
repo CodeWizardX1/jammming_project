@@ -138,6 +138,79 @@ const Spotify = {
       return [];
     }
   },
+
+  async savePlaylist(name, trackUris) {
+    if (!name || !trackUris.length) {
+      console.warn("Playlist name or tracks are missing.");
+      return;
+    }
+
+    const accessToken = await this.getAccessToken();
+    if (!accessToken) {
+      console.error("No access token. User needs to log in.");
+      return;
+    }
+
+    try {
+      // Step 1: Get user ID
+      const userResponse = await fetch("https://api.spotify.com/v1/me", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      if (!userResponse.ok) {
+        console.error("Failed to get user ID:", userResponse.statusText);
+        return;
+      }
+      const userData = await userResponse.json();
+      const userId = userData.id;
+
+      // Step 2: Create a new playlist
+      const createPlaylistResponse = await fetch(
+        `https://api.spotify.com/v1/users/${userId}/playlists`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: name,
+            description: "Created with Jammming",
+            public: false,
+          }),
+        }
+      );
+      if (!createPlaylistResponse.ok) {
+        console.error(
+          "Failed to create playlist:",
+          createPlaylistResponse.statusText
+        );
+        return;
+      }
+      const playlistData = await createPlaylistResponse.json();
+      const playlistId = playlistData.id;
+
+      // Step 3: Add tracks to the playlist
+      const addTracksResponse = await fetch(
+        `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ uris: trackUris }),
+        }
+      );
+      if (!addTracksResponse.ok) {
+        console.error("Failed to add tracks:", addTracksResponse.statusText);
+        return;
+      }
+
+      console.log(`Playlist "${name}" created and tracks added!`);
+    } catch (error) {
+      console.error("Error saving playlist:", error);
+    }
+  },
 };
 
 export default Spotify;

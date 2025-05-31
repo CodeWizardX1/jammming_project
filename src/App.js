@@ -8,7 +8,7 @@ import Spotify from "./utils/Spotify";
 
 function App() {
   const [tracks, setTracks] = useState([]);
-  const [playlistName, setPlaylistName] = useState("My Playlist");
+  const [playlistName, setPlaylistName] = useState("");
   const [playlistTracks, setPlaylistTracks] = useState([]);
   const [isAuthorized, setIsAuthorized] = useState(false);
 
@@ -29,13 +29,18 @@ function App() {
 
   const addTrackToPlaylist = (track) => {
     if (playlistTracks.find((savedTrack) => savedTrack.id === track.id)) return;
+
     setPlaylistTracks((prevTracks) => [...prevTracks, track]);
+    setTracks((prevTracks) =>
+      prevTracks.filter((item) => item.id !== track.id)
+    );
   };
 
   const removeFromPlaylist = (track) => {
     setPlaylistTracks((prev) =>
       prev.filter((savedTrack) => savedTrack.id !== track.id)
     );
+    setTracks((prev) => [...prev, track]); // Optional: add back to search results
   };
 
   const handleChange = ({ target }) => {
@@ -49,9 +54,8 @@ function App() {
 
   const savePlaylist = () => {
     const trackUris = playlistTracks.map((track) => track.uri);
-    console.log("Saving playlist with URIs:", trackUris);
-    alert("Mock save to Spotify! 🎶");
-    setPlaylistName("My Playlist");
+    Spotify.savePlaylist(playlistName, trackUris);
+    setPlaylistName("");
     setPlaylistTracks([]);
   };
 

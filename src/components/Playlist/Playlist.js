@@ -10,6 +10,7 @@ function Playlist({ playlistName, playlistTracks, onChange, onRemove, onSave}) {
         type="text"
         value={playlistName}
         onChange={onChange}
+        placeholder="Name your playlist"
       />
       <div className={styles.tracklistContainer}>
         {playlistTracks.map((track) => (
