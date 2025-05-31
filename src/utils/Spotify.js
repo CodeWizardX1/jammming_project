@@ -37,14 +37,59 @@ const Spotify = {
 
       // Redirect to Spotify for authorization
       const scopes = "playlist-modify-public";
-      const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}`;
-      
+      const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&scope=${scopes}&redirect_uri=${encodeURIComponent(
+        redirectUri
+      )}`;
+
       // Optionally, display a loading indicator or message
       alert("Redirecting to Spotify for login...");
-      
+
       window.location = authUrl;
     }
-  }
+  },
+
+  async search(term) {
+    const accessToken = this.getAccessToken();
+    if (!accessToken) {
+      console.error("No access token available.");
+      return [];
+    }
+
+    const endpoint = `https://api.spotify.com/v1/search?type=track&q=${encodeURIComponent(
+      term
+    )}`;
+
+    try {
+      const response = await fetch(endpoint, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        console.error("Spotify search failed:", response.statusText);
+        return [];
+      }
+
+      const jsonResponse = await response.json();
+
+      if (!jsonResponse.tracks) {
+        return [];
+      }
+
+      // Convert tracks to simplified format
+      return jsonResponse.tracks.items.map((track) => ({
+        id: track.id,
+        name: track.name,
+        artist: track.artists[0].name,
+        album: track.album.name,
+        uri: track.uri,
+      }));
+    } catch (error) {
+      console.error("Spotify search error:", error);
+      return [];
+    }
+  },
 };
 
 export default Spotify;

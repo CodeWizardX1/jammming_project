@@ -47,3 +47,19 @@
     transform: rotate(360deg);
   }
 }
+
+@media (max-width: 768px) {
+  .bodyContent {
+    flex-direction: column;
+    align-items: center;
+    padding: 0px 10px;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bodyContent {
+    padding: 0px 5px;
+    gap: 10px;
+  }
+}

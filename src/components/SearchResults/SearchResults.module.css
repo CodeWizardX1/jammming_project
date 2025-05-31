@@ -19,3 +19,11 @@
   background: none;
   font-size: 2.5rem;
 }
+
+@media (max-width: 768px) {
+  .resultsContainer {
+    width: 100%;
+    min-height: 0;
+    border: 2px solid black; /* Thinner border for mobile */
+  }
+}

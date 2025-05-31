@@ -56,3 +56,15 @@ input:focus {
   width: 100%;
   margin-bottom: 50px;
 }
+
+@media (max-width: 768px) {
+  .playlistContainer {
+    width: 100%;
+    min-height: unset;
+    border: 2px solid black; /* Thinner border for mobile */
+  }
+
+  .saveButton {
+    margin-bottom: 40px;
+  }
+}

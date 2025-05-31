@@ -3,8 +3,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 18px 24px;
-  border-bottom: 1px solid rgba(255,255,255,0.18);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
   background: none;
+  text-align: left;
 }
 
 .trackInfo {
@@ -41,5 +42,17 @@
 
 .addButton:hover {
   color: #a78bfa;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+@media screen and (max-width: 768px) {
+  /* make the track font size smaller */
+  .trackName {
+    text-align: left;
+  }
+
+  .addButton {
+    font-size: 1.2rem;
+    padding: 0 6px;
+  }
 }

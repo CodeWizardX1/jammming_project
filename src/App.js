@@ -4,11 +4,11 @@ import SearchBar from "./components/SearchBar/SearchBar";
 import Header from "./components/Header/Header";
 import Playlist from "./components/Playlist/Playlist";
 import SearchResults from "./components/SearchResults/SearchResults";
-import mockTracks from "./data/mockTracks";
-// import Spotify from "./utils/Spotify";
+// import mockTracks from "./data/mockTracks";
+import Spotify from "./utils/Spotify";
 
 function App() {
-  const [tracks] = useState(mockTracks);
+  const [tracks, setTracks] = useState([]);
   const [playlistName, setPlaylistName] = useState("");
   const [playlistTracks, setPlaylistTracks] = useState([]);
 
@@ -42,10 +42,15 @@ function App() {
     alert("Saved Playlist to Spotify! (mock)");
   };
 
+  const handleSearch = async (term) => {
+    const searchResults = await Spotify.search(term);
+    setTracks(searchResults);
+  };
+
   return (
     <div className="App">
       <Header />
-      <SearchBar />
+      <SearchBar onSearch={handleSearch} />
       <div className="bodyContent">
         <SearchResults tracks={tracks} onAdd={addTrackToPlaylist} />
         <Playlist
