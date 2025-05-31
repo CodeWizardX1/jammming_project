@@ -1,69 +1,97 @@
-let accessToken;
+import { generatePKCE } from "./PKCE";
+
 const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
 const redirectUri = process.env.REACT_APP_SPOTIFY_REDIRECT_URI;
+const scopes = "playlist-modify-public playlist-modify-private";
+
+let accessToken = null;
 
 const Spotify = {
-  getAccessToken() {
+  authorize() {
+    const codeChallenge = generatePKCE(); // Generate PKCE challenge
+    const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(
+      redirectUri
+    )}&scope=${encodeURIComponent(
+      scopes
+    )}&code_challenge_method=S256&code_challenge=${codeChallenge}`;
+    window.location = authUrl; // Redirect to Spotify login
+  },
+
+  async getAccessToken() {
+    // Check if access token is already in sessionStorage
+    accessToken = sessionStorage.getItem("access_token");
     if (accessToken) {
       return accessToken;
     }
 
-    // Check for token and expiration time in URL
-    const accessTokenMatch = window.location.href.match(/access_token=([^&]*)/);
-    const expiresInMatch = window.location.href.match(/expires_in=([^&]*)/);
+    // Look for authorization code in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
+    if (!code) {
+      console.warn(
+        "No authorization code found. Redirecting to Spotify login..."
+      );
+      this.authorize();
+      return null;
+    }
 
-    if (accessTokenMatch && expiresInMatch) {
-      accessToken = accessTokenMatch[1];
-      const expiresIn = Number(expiresInMatch[1]);
+    // Retrieve PKCE verifier
+    const verifier = sessionStorage.getItem("pkce_verifier");
+    if (!verifier) {
+      console.error("PKCE verifier not found in session storage.");
+      this.authorize(); // Start over if verifier is missing
+      return null;
+    }
 
-      // Validate token and expiration
-      if (!accessToken || isNaN(expiresIn)) {
-        console.error("Invalid Spotify access token or expiration time.");
+    // Exchange authorization code for access token
+    const body = new URLSearchParams({
+      client_id: clientId,
+      grant_type: "authorization_code",
+      code: code,
+      redirect_uri: redirectUri,
+      code_verifier: verifier,
+    });
+
+    try {
+      const response = await fetch("https://accounts.spotify.com/api/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body,
+      });
+
+      if (!response.ok) {
+        console.error(
+          "Failed to exchange code for token:",
+          response.statusText
+        );
+        this.authorize(); // Start over if exchange fails
         return null;
       }
 
-      // Clear the token after expiration
-      window.setTimeout(() => {
-        accessToken = "";
-        console.warn("Spotify access token has expired.");
-      }, expiresIn * 1000);
-
-      // Clean up the URL
-      window.history.pushState("Access Token", null, "/");
-
+      const data = await response.json();
+      accessToken = data.access_token;
+      sessionStorage.setItem("access_token", accessToken);
+      window.history.replaceState({}, document.title, "/"); // Clean URL
       return accessToken;
-    } else {
-      console.warn("Spotify access token not found. Redirecting to login...");
-
-      // Redirect to Spotify for authorization
-      const scopes = "playlist-modify-public";
-      const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&scope=${scopes}&redirect_uri=${encodeURIComponent(
-        redirectUri
-      )}`;
-
-      // Optionally, display a loading indicator or message
-      alert("Redirecting to Spotify for login...");
-
-      window.location = authUrl;
+    } catch (error) {
+      console.error("Error during token exchange:", error);
+      return null;
     }
   },
 
   async search(term) {
-    const accessToken = this.getAccessToken();
-    if (!accessToken) {
-      console.error("No access token available.");
+    const token = await this.getAccessToken();
+    if (!token) {
+      console.error("No valid access token. Cannot perform search.");
       return [];
     }
 
     const endpoint = `https://api.spotify.com/v1/search?type=track&q=${encodeURIComponent(
       term
     )}`;
-
     try {
       const response = await fetch(endpoint, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (!response.ok) {
@@ -72,12 +100,8 @@ const Spotify = {
       }
 
       const jsonResponse = await response.json();
+      if (!jsonResponse.tracks) return [];
 
-      if (!jsonResponse.tracks) {
-        return [];
-      }
-
-      // Convert tracks to simplified format
       return jsonResponse.tracks.items.map((track) => ({
         id: track.id,
         name: track.name,
@@ -86,7 +110,7 @@ const Spotify = {
         uri: track.uri,
       }));
     } catch (error) {
-      console.error("Spotify search error:", error);
+      console.error("Error fetching search results:", error);
       return [];
     }
   },

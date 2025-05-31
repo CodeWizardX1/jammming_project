@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import SearchBar from "./components/SearchBar/SearchBar";
 import Header from "./components/Header/Header";
@@ -11,6 +11,14 @@ function App() {
   const [tracks, setTracks] = useState([]);
   const [playlistName, setPlaylistName] = useState("");
   const [playlistTracks, setPlaylistTracks] = useState([]);
+
+  useEffect(() => {
+    async function fetchToken() {
+      const token = await Spotify.getAccessToken();
+      console.log("Access Token:", token);
+    }
+    fetchToken();
+  }, []);
 
   const addTrackToPlaylist = (track) => {
     if (playlistTracks.find((savedTrack) => savedTrack.id === track.id)) {
