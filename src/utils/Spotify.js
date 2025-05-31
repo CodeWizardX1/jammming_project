@@ -142,7 +142,7 @@ const Spotify = {
   async savePlaylist(name, trackUris) {
     if (!name || !trackUris.length) {
       console.warn("Playlist name or tracks are missing.");
-      alert("Playlist name or tracks are missing!")
+      alert("Playlist name or tracks are missing! Refresh the page and try again.")
       return;
     }
 
