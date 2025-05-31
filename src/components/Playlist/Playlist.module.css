@@ -57,7 +57,7 @@ input:focus {
   margin-bottom: 50px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 962px) {
   .playlistContainer {
     width: 100%;
     min-height: unset;

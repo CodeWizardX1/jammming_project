@@ -41,7 +41,7 @@ input {
     background: #22223b;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 962px) {
   input {
     width: 90%;
     max-width: 300px;

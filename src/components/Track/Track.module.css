@@ -45,7 +45,7 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 962px) {
   /* make the track font size smaller */
   .trackName {
     text-align: left;
