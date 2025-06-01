@@ -4,7 +4,7 @@ import SearchBar from "./components/SearchBar/SearchBar";
 import Header from "./components/Header/Header";
 import Playlist from "./components/Playlist/Playlist";
 import SearchResults from "./components/SearchResults/SearchResults";
-import Spotify from "./util/Spotify";
+import Spotify from "./utils/Spotify";
 
 function App() {
   const [tracks, setTracks] = useState([]);
