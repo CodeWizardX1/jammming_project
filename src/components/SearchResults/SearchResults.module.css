@@ -2,7 +2,8 @@
   display: flex;
   flex-direction: column;
   width: 50%;
-  min-height: 100vh;
+  height: 80vh;
+  max-height: 80vh;
   background-color: rgba(0, 0, 0, 0.637);
   border: 5px solid black;
   border-radius: 10px;
@@ -12,19 +13,51 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  flex-shrink: 0;
 }
 
 .resultsHeading {
   display: flex;
   background: none;
   font-size: 2.5rem;
+  margin: 0;
+  padding: 1rem;
+}
+
+.tracklistContainer {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Custom scrollbar styling */
+.tracklistContainer::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tracklistContainer::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.tracklistContainer::-webkit-scrollbar-thumb {
+  background: #1db954;
+  border-radius: 4px;
+}
+
+.tracklistContainer::-webkit-scrollbar-thumb:hover {
+  background: #1ed760;
 }
 
 .loadMoreContainer {
   display: flex;
   justify-content: center;
   padding: 1rem;
-  margin-top: auto;
+  flex-shrink: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .loadMoreButton {
@@ -61,10 +94,19 @@
 @media (max-width: 962px) {
   .resultsContainer {
     width: 100%;
-    min-height: 0;
+    height: 60vh;
+    max-height: 60vh;
     border: 2px solid black; /* Thinner border for mobile */
   }
 
+  .resultsHeading {
+    font-size: 2rem;
+    padding: 0.5rem;
+  }
+
+  .tracklistContainer {
+    padding: 0 0.5rem;
+  }
   .loadMoreButton {
     padding: 10px 20px;
     font-size: 0.9rem;
