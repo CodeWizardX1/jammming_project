@@ -43,12 +43,12 @@
 }
 
 .tracklistContainer::-webkit-scrollbar-thumb {
-  background: #1db954;
+  background: #7c3aed;
   border-radius: 4px;
 }
 
 .tracklistContainer::-webkit-scrollbar-thumb:hover {
-  background: #1ed760;
+  background: #8547f0;
 }
 
 .loadMoreContainer {
@@ -61,7 +61,7 @@
 }
 
 .loadMoreButton {
-  background-color: #1db954;
+  background-color: #7c3aed;
   color: white;
   border: none;
   border-radius: 25px;
