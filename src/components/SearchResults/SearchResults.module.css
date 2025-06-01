@@ -48,7 +48,7 @@
 }
 
 .tracklistContainer::-webkit-scrollbar-thumb:hover {
-  background: #8547f0;
+  background: #9f70f9;
 }
 
 .loadMoreContainer {
@@ -75,7 +75,7 @@
 }
 
 .loadMoreButton:hover:not(:disabled) {
-  background-color: #1ed760;
+  background-color: #9f70f9;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
 }
