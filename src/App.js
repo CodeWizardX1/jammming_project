@@ -8,7 +8,7 @@ import Spotify from "./utils/Spotify";
 
 function App() {
   const [tracks, setTracks] = useState([]);
-  const [playlistName, setPlaylistName] = useState("My Playlist");
+  const [playlistName, setPlaylistName] = useState("");
   const [playlistTracks, setPlaylistTracks] = useState([]);
   const [isAuthorized, setIsAuthorized] = useState(false);
 
