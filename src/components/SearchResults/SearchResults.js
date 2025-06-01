@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./SearchResults.module.css";
 import Tracklist from "../Tracklist/Tracklist";
 
-function SearchResults({tracks, onAdd}) {
+function SearchResults({tracks, onAdd, onLoadMore, hasMoreResults, isLoadingMore}) {
   return (
     <div className={styles.resultsContainer}>
       <div className={styles.headingContainer}>
@@ -11,6 +11,17 @@ function SearchResults({tracks, onAdd}) {
       <div className={styles.tracklistContainer}>
         <Tracklist tracks={tracks} isRemoval={false} onAdd={onAdd}/>
       </div>
+      {hasMoreResults && (
+        <div className={styles.loadMoreContainer}>
+          <button 
+            className={styles.loadMoreButton}
+            onClick={onLoadMore}
+            disabled={isLoadingMore}
+          >
+            {isLoadingMore ? "Loading..." : "Load More"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

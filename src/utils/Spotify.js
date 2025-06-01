@@ -102,17 +102,16 @@ const Spotify = {
       return null;
     }
   },
-
-  async search(term) {
+  async search(term, limit = 50, offset = 0) {
     const token = await this.getAccessToken();
     if (!token) {
       console.error("No valid token, cannot search.");
-      return [];
+      return { tracks: [], hasMore: false };
     }
 
     const endpoint = `https://api.spotify.com/v1/search?type=track&q=${encodeURIComponent(
       term
-    )}`;
+    )}&limit=${limit}&offset=${offset}`;
     try {
       const response = await fetch(endpoint, {
         headers: { Authorization: `Bearer ${token}` },
@@ -120,22 +119,27 @@ const Spotify = {
 
       if (!response.ok) {
         console.error("Search failed:", response.statusText);
-        return [];
+        return { tracks: [], hasMore: false };
       }
 
       const jsonResponse = await response.json();
-      if (!jsonResponse.tracks) return [];
+      if (!jsonResponse.tracks) return { tracks: [], hasMore: false };
 
-      return jsonResponse.tracks.items.map((track) => ({
+      const tracks = jsonResponse.tracks.items.map((track) => ({
         id: track.id,
         name: track.name,
         artist: track.artists[0].name,
         album: track.album.name,
         uri: track.uri,
       }));
+
+      // Check if there are more results available
+      const hasMore = jsonResponse.tracks.total > offset + tracks.length;
+
+      return { tracks, hasMore };
     } catch (error) {
       console.error("Error in search:", error);
-      return [];
+      return { tracks: [], hasMore: false };
     }
   },
 

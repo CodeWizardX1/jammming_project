@@ -11,6 +11,10 @@ function App() {
   const [playlistName, setPlaylistName] = useState("");
   const [playlistTracks, setPlaylistTracks] = useState([]);
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [currentSearchTerm, setCurrentSearchTerm] = useState("");
+  const [currentOffset, setCurrentOffset] = useState(0);
+  const [hasMoreResults, setHasMoreResults] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const addTrackToPlaylist = (track) => {
     if (playlistTracks.find((savedTrack) => savedTrack.id === track.id)) return;
@@ -42,8 +46,33 @@ function App() {
       }
     }
 
-    const searchResults = await Spotify.search(term);
-    setTracks(searchResults);
+    // Reset pagination state for new search
+    setCurrentSearchTerm(term);
+    setCurrentOffset(0);
+    setIsLoadingMore(false);
+    
+    const searchResults = await Spotify.search(term, 50, 0);
+    setTracks(searchResults.tracks);
+    setHasMoreResults(searchResults.hasMore);
+  };
+
+  const loadMoreResults = async () => {
+    if (!currentSearchTerm || isLoadingMore || !hasMoreResults) return;
+    
+    setIsLoadingMore(true);
+    const newOffset = currentOffset + 50;
+    
+    try {
+      const searchResults = await Spotify.search(currentSearchTerm, 50, newOffset);
+      // Merge new results with existing tracks
+      setTracks(prevTracks => [...prevTracks, ...searchResults.tracks]);
+      setCurrentOffset(newOffset);
+      setHasMoreResults(searchResults.hasMore);
+    } catch (error) {
+      console.error("Error loading more results:", error);
+    } finally {
+      setIsLoadingMore(false);
+    }
   };
 
   const savePlaylist = () => {
@@ -58,7 +87,13 @@ function App() {
       <Header />
       <SearchBar onSearch={handleSearch} />
       <div className="bodyContent">
-        <SearchResults tracks={tracks} onAdd={addTrackToPlaylist} />
+        <SearchResults 
+          tracks={tracks} 
+          onAdd={addTrackToPlaylist} 
+          onLoadMore={loadMoreResults}
+          hasMoreResults={hasMoreResults}
+          isLoadingMore={isLoadingMore}
+        />
         <Playlist
           playlistName={playlistName}
           playlistTracks={playlistTracks}
